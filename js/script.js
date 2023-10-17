@@ -1,3 +1,16 @@
+function changeMode(){
+    let element = document.querySelector("html");
+    let imgElement = document.querySelector("#toggleMode")
+    if (element.getAttribute("data-bs-theme") == 'dark'){
+    element.setAttribute("data-bs-theme", 'light');
+    imgElement.setAttribute("src", "images/darkness.png");
+    } else {
+    element.setAttribute("data-bs-theme", 'dark');
+    imgElement.setAttribute("src", "images/brightness.png");
+    }
+
+    // add to local storage for the preference for next time too
+}
 async function fetchData(query) {
   var apiKey = '+8x8sQwrEimceQ4AvjzpnA==6MJHg4ldNrSlkasy';
   var apiUrl = 'https://api.api-ninjas.com/v1/nutrition?query=' + query;
