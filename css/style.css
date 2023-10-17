@@ -1,0 +1,15 @@
+.title { 
+    background-image: url("../images/bg.jpg"); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    font-size: 120px; 
+    font-family:arial;
+    font-weight: 800; 
+} 
+
+#toggleMode {
+right: 10px;
+    position: absolute;
+    height: 52px;
+    top: 10px;
+}
