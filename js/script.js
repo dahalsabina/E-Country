@@ -1,15 +1,25 @@
+function change_to_light_mode(html_element, img_element) {
+    html_element.setAttribute("data-bs-theme", 'light');
+    img_element.setAttribute("src", "images/darkness.png");
+}
+
+function change_to_dark_mode(html_element, img_element) {
+    html_element.setAttribute("data-bs-theme", 'dark');
+    img_element.setAttribute("src", "images/brightness.png");
+}
+
 function changeMode(){
     let element = document.querySelector("html");
     let imgElement = document.querySelector("#toggleMode")
+
     if (element.getAttribute("data-bs-theme") == 'dark'){
-    element.setAttribute("data-bs-theme", 'light');
-    imgElement.setAttribute("src", "images/darkness.png");
+    change_to_light_mode(element, imgElement);
+    window.localStorage.setItem("toggle_mode", "light");
     } else {
-    element.setAttribute("data-bs-theme", 'dark');
-    imgElement.setAttribute("src", "images/brightness.png");
+    change_to_dark_mode(element, imgElement);
+    window.localStorage.setItem("toggle_mode", "dark");
     }
 
-    // add to local storage for the preference for next time too
 }
 async function fetchData(query) {
   var apiKey = '+8x8sQwrEimceQ4AvjzpnA==6MJHg4ldNrSlkasy';
@@ -87,3 +97,43 @@ document.getElementById('queryForm').addEventListener('submit', async function (
       console.error(error);
   }
 });
+
+function changeSoundMode() {
+    let element = document.querySelector('#sound');
+    let audio_element = document.querySelector("#my_audio");
+    if (element.value == 'volume') {
+        element.src = 'images/mute.png';
+        element.value = 'mute';
+        audio_element.muted = true
+    } else {
+    audio_element.muted = false
+    element.src = 'images/volume.png'
+    element.value = 'volume';
+    }
+}
+function playAudio() {
+
+    audio_element = document.querySelector("#my_audio");
+    if (document.querySelector('#sound').value == 'mute') {
+        return}
+
+    audio_element.muted = false
+    audio_element.setAttribute("src" , "audio/money.mp3")
+    audio_element.play()
+    setTimeout(()=>{
+        audio_element.setAttribute("src" , "")},8000
+    )
+}
+window.onload = function () {
+
+    // get local storage items and load them as necessary
+    let element = document.querySelector("html");
+    let imgElement = document.querySelector("#toggleMode")
+
+    mode = window.localStorage.getItem("toggle_mode");
+    if (mode == 'light') {
+        change_to_light_mode(element, imgElement);
+    } else {
+        change_to_dark_mode(element, imgElement);
+    } 
+}

@@ -13,3 +13,11 @@ right: 10px;
     height: 52px;
     top: 10px;
 }
+
+#sound {
+right: 60px;
+    position: absolute;
+    height: 52px;
+    width: 40px;
+    top: 10px;
+}

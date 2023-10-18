@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark" >
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +11,16 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
+  <audio id="my_audio" src="audio/money.mp3" loop="false" autoplay=""></audio>
 
   <div class="container">
     <input id="toggleMode" type="image" src="images/brightness.png" onclick="changeMode()"/>
+    <br />
+    <input id="sound" type="image" src="images/mute.png" onclick="changeSoundMode()" value="mute"/>
   </div>
   <div class="container text-center">
-    <h1 class="title">E-COUNTRY</h1>
+    
+    <h1 class="title" >E-COUNTRY</h1>
   </div>
   <div class="container">
 
@@ -25,7 +29,7 @@
         <label for="queryInput">What's Your Food?</label>
         <input type="text" class="form-control" id="queryInput" name="query" required>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" id="submitBtn" class="btn btn-primary" onclick="playAudio()">Submit</button>
     </form>
 
     <div id="resultContainer" class="mt-4">
