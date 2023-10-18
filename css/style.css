@@ -21,3 +21,8 @@ right: 60px;
     width: 40px;
     top: 10px;
 }
+
+#submitBtn {
+    position: relative;
+    top: 40%;
+}
