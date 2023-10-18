@@ -1,6 +1,11 @@
+var all_country_names = [];
 async function getAllCountryInfo() {
   let all_country_info = await fetch("https://restcountries.com/v3.1/all");
   all_country_data = await all_country_info.json();
+
+  for (let country_data of all_country_data) {
+    all_country_names.push(country_data.name.common)
+  }
   return all_country_data
 }
 var all_country_data = getAllCountryInfo();
@@ -167,7 +172,7 @@ function playAudio() {
 }
 
 function autoComplete(element) {
-    inputElement = element.srcElement
+  inputElement = element.srcElement
   let id_ = null;
   if (inputElement.id == 'queryInput1') {
     id_ = 1;
@@ -184,13 +189,10 @@ function autoComplete(element) {
 
   let grand_parent_element = document.querySelector("#resultContainer");
 
-  let appropriate_countries = [];
   for (let country_data of all_country_data) {
     if (country_data.name.common.toLowerCase().startsWith(inputElement.value.toLowerCase())) {
 
-      appropriate_countries.push(country_data.name.common)
-
-      div_element = document.createElement("div");
+      div_element = document.createElement('div');
       div_element.setAttribute("class", "individual_name")
 
       strong_element = document.createElement("strong");
@@ -213,6 +215,33 @@ function show_country_on_input(event) {
     document.querySelector("#queryInput2").value = element.innerText
     document.querySelector('#autoCompleteListDiv2').innerHTML = ""
   }
+}
+function compareCountries() {
+  let country_one_element = document.querySelector("#queryInput1");
+  let country_two_element = document.querySelector("#queryInput2");
+  if (all_country_names.includes(country_one_element.value) && all_country_names.includes(country_two_element.value)) {
+    playAudio()
+
+  } else {
+    // show warning if input is not valid
+    let wariningdiv = document.querySelector("#warningContainer");
+    wariningdiv.innerHTML = ''
+
+    let div_element = document.createElement('div');
+    div_element.setAttribute("class", "alert alert-warning alert-dismissible fade show")
+    div_element.setAttribute("id", "warningDiv")
+    div_element.setAttribute("role", "alert")
+    div_element.innerText = "ERROR ! Select countries again"
+
+    let button_element = document.createElement('button');
+    button_element.setAttribute("class", "btn-close")
+    button_element.setAttribute("onclick", "document.querySelector('#warningDiv').remove()")
+
+    div_element.append(button_element);
+    wariningdiv.append(div_element)
+  }
+
+
 }
 window.onload = function () {
 
