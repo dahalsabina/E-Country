@@ -1,3 +1,10 @@
+async function getAllCountryInfo() {
+  let all_country_info = await fetch("https://restcountries.com/v3.1/all");
+  all_country_data = await all_country_info.json();
+  return all_country_data
+}
+var all_country_data = getAllCountryInfo();
+
 
 async function fetchCurrencyInfo() {
     try {
@@ -43,7 +50,7 @@ async function fetchCurrencyInfo() {
   
   
   
-  async function fetchExchangeRatesForPastMonths() {
+async function fetchExchangeRatesForPastMonths() {
     try {
       const currencyInfo = await fetchCurrencyInfo();
       if (!currencyInfo) {
@@ -158,6 +165,21 @@ function playAudio() {
         audio_element.setAttribute("src" , "")},8000
     )
 }
+
+function autoComplete(element) {
+  inputElement = element.srcElement
+  console.log(inputElement.value);
+  if (inputElement.value == ''){
+    return
+  }
+  let appropriate_countries = [];
+  for (let country_data of all_country_data) {
+    if (country_data.name.common.toLowerCase().startsWith(inputElement.value.toLowerCase())) {
+      appropriate_countries.push(country_data.name.common)
+    }
+  }
+}
+
 window.onload = function () {
 
     // get local storage items and load them as necessary
@@ -170,4 +192,10 @@ window.onload = function () {
     } else {
         change_to_dark_mode(element, imgElement);
     } 
+    
+    var inputElement1 = document.querySelector('#queryInput1');
+    var inputElement2 = document.querySelector('#queryInput2');
+    inputElement1.addEventListener("input", autoComplete)
+    inputElement2.addEventListener("input", autoComplete)
+    // call all countrues and get them ready for search data
 }
