@@ -31,7 +31,14 @@
         <div class="col-md-6">
         <input type="text" class="form-control" id="queryInput2" name="query" required placeholder="Country"/>
         </div>
+
+      <div id="resultContainer" class="row form-group">
+        <div id="autoCompleteListDiv1" class="col-md-6">
+        </div>
+        <div id="autoCompleteListDiv2" class="col-md-6">
+        </div>
       </div>
+
       <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4 d-grid gap-1">
@@ -42,9 +49,7 @@
     </form>
 
   </div>
-  <div class="container">
-    <div id="resultContainer" class="mt-4">
-      <p id="currencyResult"></p>
+  <div class="container" id="outputContainer">
     </div>
     
   </div>

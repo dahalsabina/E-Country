@@ -26,3 +26,33 @@ right: 60px;
     position: relative;
     top: 40%;
 }
+
+.country_name_div1, .country_name_div2{
+    cursor: pointer;
+    -webkit-filter: brightness(100%);
+    color: black;
+    display: block !important;
+    width: 100%;
+}
+
+#resultContainer {
+    position: absolute;
+    z-index: 1;
+    margin-top: 40px;
+}
+#autoCompleteListDiv1, #autoCompleteListDiv2 {
+    width: 44%;
+    margin-left: 5px;
+}
+
+.individual_name{
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff; 
+    border-bottom: 1px solid #d4d4d4; 
+  }
+  
+  /*when hovering an item:*/
+.individual_name:hover{
+    background-color: #e9e9e9; 
+  }

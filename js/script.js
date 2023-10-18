@@ -167,19 +167,53 @@ function playAudio() {
 }
 
 function autoComplete(element) {
-  inputElement = element.srcElement
-  console.log(inputElement.value);
+    inputElement = element.srcElement
+  let id_ = null;
+  if (inputElement.id == 'queryInput1') {
+    id_ = 1;
+  } else {
+    id_ = 2;
+  }
+
+  let parent_element = document.querySelector(`#autoCompleteListDiv${id_}`);
+  parent_element.innerHTML=""
+
   if (inputElement.value == ''){
     return
   }
+
+  let grand_parent_element = document.querySelector("#resultContainer");
+
   let appropriate_countries = [];
   for (let country_data of all_country_data) {
     if (country_data.name.common.toLowerCase().startsWith(inputElement.value.toLowerCase())) {
+
       appropriate_countries.push(country_data.name.common)
+
+      div_element = document.createElement("div");
+      div_element.setAttribute("class", "individual_name")
+
+      strong_element = document.createElement("strong");
+      strong_element.setAttribute("class" , `country_name_div${id_}`);
+      strong_element.addEventListener("click", show_country_on_input)
+      strong_element.innerHTML=country_data.name.common
+      div_element.append(strong_element);
+      parent_element.append(div_element);
     }
   }
 }
 
+function show_country_on_input(event) {
+  element = event.srcElement;
+
+  if (element.getAttribute("class") == 'country_name_div1') {
+    document.querySelector("#queryInput1").value = element.innerText
+    document.querySelector('#autoCompleteListDiv1').innerHTML = ""
+  } else {
+    document.querySelector("#queryInput2").value = element.innerText
+    document.querySelector('#autoCompleteListDiv2').innerHTML = ""
+  }
+}
 window.onload = function () {
 
     // get local storage items and load them as necessary
