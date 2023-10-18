@@ -143,8 +143,21 @@ function changeMode(){
     }
 
 }
+function changeSoundMode() {
+  let element = document.querySelector('#sound');
+  let audio_element = document.querySelector("#my_audio");
+  console.log('here')
+  if (element.value == 'volume') {
+      element.src = 'images/mute.png';
+      element.value = 'mute';
+      audio_element.muted = true
+  } else {
+    audio_element.muted = false
+    element.src = 'images/volume.png'
+    element.value = 'volume';
+  }}
 
-  function generateChart() {
+function generateChart() {
     try {
       const resultContainer = document.getElementById('currencyResult');
   
