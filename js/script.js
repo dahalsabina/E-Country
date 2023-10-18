@@ -106,4 +106,68 @@ async function fetchCurrencyInfo() {
       console.error('Error fetching exchange rates:', error.message);
     }
   }
+
+  
+
+  function generateChart() {
+    try {
+      const resultContainer = document.getElementById('currencyResult');
+  
+      
+      const exchangeRateDataArray = JSON.parse(localStorage.getItem('exchangeRateData'));
+  
+      if (!exchangeRateDataArray || exchangeRateDataArray.length !== 5) {
+        throw new Error('Invalid or missing exchange rate data.');
+      }
+  
+     
+      const labels = exchangeRateDataArray.map(data => {
+        const date = new Date(data.date);
+        return `${date.toLocaleString('en-us', { month: 'short' })} ${date.getFullYear()}`;
+      });
+  
+      
+      const currencyInfo = (exchangeRateDataArray[0] && Object.keys(exchangeRateDataArray[0])[1]) || '';
+      const yMinValue = 135; 
+  
+      const dataset = {
+        backgroundColor: 'rgba(255, 150, 150, 0.5)',
+        borderColor: 'rgb(255, 150, 150)',
+        data: exchangeRateDataArray.map(data => data[currencyInfo.toLowerCase()]),
+        label: 'Exchange Rate',
+        fill: 'origin',
+      };
+  
+      
+      const chartConfig = {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [dataset],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: yMinValue,
+            },
+          },
+        },
+      };
+  
+      
+      const chartUrl = `https://image-charts.com/chart.js/2.8.0?bkg=white&c=${encodeURIComponent(JSON.stringify(chartConfig))}`;
+  
+      
+      const chartImage = document.createElement('img');
+      chartImage.src = chartUrl;
+  
+      resultContainer.appendChild(chartImage);
+  
+      
+     
+    } catch (error) {
+      console.error('Error generating chart:', error.message);
+    }
+  }
   
