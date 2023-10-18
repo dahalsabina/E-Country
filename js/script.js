@@ -1,3 +1,113 @@
+
+async function fetchCurrencyInfo() {
+    try {
+      const countryInput = document.getElementById('countryInput').value.toLowerCase(); 
+      const resultContainer = document.getElementById('currencyResult');
+  
+      resultContainer.textContent = '';
+  
+      if (!countryInput) {
+        resultContainer.textContent = 'Please enter a country name.';
+        return null;
+      }
+  
+      const response = await fetch(`https://restcountries.com/v3.1/name/${countryInput}`);
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const countryData = await response.json();
+  
+      if (countryData.length === 0) {
+        resultContainer.textContent = 'Country not found. Please check the spelling.';
+        return null;
+      }
+  
+      const currenciesInfo = countryData[0]?.currencies || {};
+      const currencyCodes = Object.keys(currenciesInfo);
+  
+      if (currencyCodes.length > 0) {
+        const currencyCode = currencyCodes[0].toLowerCase(); 
+        resultContainer.textContent = `Currency Code: ${currencyCode}`;
+        return currencyCode;
+      } else {
+        resultContainer.textContent = 'No currency information available for this country.';
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+      return null;
+    }
+  }
+  
+  
+  
+  async function fetchExchangeRatesForPastMonths() {
+    try {
+      const currencyInfo = await fetchCurrencyInfo();
+      if (!currencyInfo) {
+        console.error('No currency code available.');
+        return;
+      }
+  
+      const currentDate = new Date();
+      const resultContainer = document.getElementById('currencyResult');
+  
+      
+      resultContainer.innerHTML = '';
+      const exchangeRateDataArray = [];
+  
+     
+      const table = document.createElement('table');
+      table.className = 'table table-bordered';
+  
+      
+      const headerRow = table.insertRow(0);
+      const dateHeader = headerRow.insertCell(0);
+      const currencyCodeHeader = headerRow.insertCell(1);
+  
+      dateHeader.textContent = 'Date';
+      currencyCodeHeader.textContent = 'Currency Value compared to Base Eur';
+  
+      for (let i = 0; i < 5; i++) {
+        const pastDate = new Date();
+        pastDate.setMonth(currentDate.getMonth() - i);
+  
+        
+        const formattedDate = pastDate.toISOString().split('T')[0];
+  
+        const apiUrl = `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/${formattedDate}/currencies/eur/${currencyInfo.toLowerCase()}.json`;
+        console.log(`API URL for ${formattedDate}:`, apiUrl);
+  
+        const response = await fetch(apiUrl);
+  
+        if (!response.ok) {
+          throw new Error('Error fetching exchange rate');
+        }
+  
+        const exchangeRateData = await response.json();
+        exchangeRateDataArray.push(exchangeRateData);
+  
+        
+        const row = table.insertRow(i + 1);
+        const dateCell = row.insertCell(0);
+        const currencyCodeCell = row.insertCell(1);
+  
+        dateCell.textContent = exchangeRateData.date;
+        currencyCodeCell.textContent = exchangeRateData[currencyInfo.toLowerCase()];
+      }
+  
+      
+      resultContainer.appendChild(table);
+      localStorage.setItem('exchangeRateData', JSON.stringify(exchangeRateDataArray));
+  
+      
+    } catch (error) {
+      console.error('Error fetching exchange rates:', error.message);
+    }
+  }
+
 function change_to_light_mode(html_element, img_element) {
     html_element.setAttribute("data-bs-theme", 'light');
     img_element.setAttribute("src", "images/darkness.png");
@@ -21,82 +131,6 @@ function changeMode(){
     }
 
 }
-async function fetchData(query) {
-  var apiKey = '+8x8sQwrEimceQ4AvjzpnA==6MJHg4ldNrSlkasy';
-  var apiUrl = 'https://api.api-ninjas.com/v1/nutrition?query=' + query;
-
-  try {
-      const response = await fetch(apiUrl, {
-          method: 'GET',
-          headers: {
-              'X-Api-Key': apiKey,
-              'Content-Type': 'application/json'
-          }
-      });
-
-      const result = await response.json();
-
-      // Save the result to local storage
-      localStorage.setItem('nutritionData', JSON.stringify(result));
-
-      return result;
-  } catch (error) {
-      throw new Error('Error:', error);
-  }
-}
-
-async function displayNutritionalInfo(result) {
-  var thead = document.querySelector('#nutritionTable thead');
-  var tbody = document.querySelector('#nutritionTable tbody');
-
-  // Clear existing content
-  thead.innerHTML = '';
-  tbody.innerHTML = '';
-
-  if (result.length > 0) {
-      // Create a header row
-      var headerRow = document.createElement('tr');
-      for (var key in result[0]) {
-          var headerCell = document.createElement('th');
-          headerCell.textContent = key.replace(/_/g, ' ');
-          headerRow.appendChild(headerCell);
-      }
-
-      // Append the header row to the thead
-      thead.appendChild(headerRow);
-
-      // Create a data row for each item in the result array
-      for (var i = 0; i < result.length; i++) {
-          var dataRow = document.createElement('tr');
-
-          // Iterate over the properties of each item and create a cell for each
-          for (var key in result[i]) {
-              var dataCell = document.createElement('td');
-              dataCell.textContent = result[i][key];
-              dataRow.appendChild(dataCell);
-          }
-
-          // Append the data row to the tbody
-          tbody.appendChild(dataRow);
-      }
-  } else {
-      // Display a message if no nutritional information is found
-      resultContainer.innerHTML = '<p>No nutritional information found.</p>';
-  }
-}
-
-document.getElementById('queryForm').addEventListener('submit', async function (event) {
-  event.preventDefault();
-
-  var query = document.getElementById('queryInput').value;
-
-  try {
-      const result = await fetchData(query);
-      await displayNutritionalInfo(result);
-  } catch (error) {
-      console.error(error);
-  }
-});
 
 function changeSoundMode() {
     let element = document.querySelector('#sound');
