@@ -1,7 +1,7 @@
 # E-COUNTRY
-## Compare currency prices with graphs and table data of any two countries
+#### Compare currency prices with graphs and table data of any two countries
 
-# How to check out the webite ?
+# Check out the website !
 Head over to <a href="paudsu01.github.io/e-country/index.html"> this page </a>
 
 # API's used:
@@ -24,10 +24,10 @@ To load up the server, you could use the http.server provided by any programming
 ```bash
 python3 -m http.server
 ```
-Head over to <a href="localhost:8000">localhost:8000</a>
+Head over to <a href="http://localhost:8000">localhost:8000</a>
 
 # License:
 MIT License
 
-### This was done as our Midterm Project for CS 330 : Internet Programming
-### And, we for sure nailed it.
+#### This was done as our Midterm Project for CS 330 : Internet Programming
+#### And, we for sure nailed it.
