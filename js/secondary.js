@@ -21,7 +21,6 @@ function change_to_dark_mode(html_element, img_element) {
     html_element.setAttribute("data-bs-theme", 'dark');
     img_element.setAttribute("src", "images/brightness.png");
 }
-
 function changeMode(){
     let element = document.querySelector("html");
     let imgElement = document.querySelector("#toggleMode")
@@ -38,7 +37,6 @@ function changeMode(){
 function changeSoundMode() {
   let element = document.querySelector('#sound');
   let audio_element = document.querySelector("#my_audio");
-  console.log('here')
   if (element.value == 'volume') {
       element.src = 'images/mute.png';
       element.value = 'mute';
