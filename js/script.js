@@ -1,17 +1,27 @@
 var all_country_names = [];
+var all_country_flags_dict = {};
+var all_country_info_dict = {};
+var all_country_currency_code_dict = {};
 async function getAllCountryInfo() {
   let all_country_info = await fetch("https://restcountries.com/v3.1/all");
   all_country_data = await all_country_info.json();
 
   for (let country_data of all_country_data) {
     all_country_names.push(country_data.name.common)
+    all_country_flags_dict[country_data.name.common] = country_data.flags.png
+    all_country_info_dict[country_data.name.common] = [country_data.capital, country_data.population]
+    try {
+    all_country_currency_code_dict[country_data.name.common] = Object.keys(country_data.currencies)[0]
+    } catch (error) {
+    all_country_currency_code_dict[country_data.name.common] = null
+    } 
   }
   return all_country_data
 }
 var all_country_data = getAllCountryInfo();
 
 
-async function fetchCurrencyInfo() {
+async function fetchCurrencyInfo(countryone, countrytwo) {
     try {
       const countryInput = document.getElementById('countryInput').value.toLowerCase(); 
       const resultContainer = document.getElementById('currencyResult');
@@ -278,11 +288,55 @@ function show_country_on_input(event) {
     document.querySelector('#autoCompleteListDiv2').innerHTML = ""
   }
 }
+function display_basic_info(country_one_element, country_two_element) {
+  let country_one_div = document.querySelector("#country1_output")
+  country_one_div.innerHTML = ""
+  let country_two_div = document.querySelector("#country2_output")
+  country_two_div.innerHTML = ""
+
+  country_one_header = document.createElement('h3')
+  country_one_header.setAttribute("class", "secondary-title")
+  country_one_header.innerText = country_one_element.value.toUpperCase();
+  country_two_header = document.createElement('h3')
+  country_two_header.setAttribute("class", "secondary-title")
+  country_two_header.setAttribute("class", "secondary-title")
+  country_two_header.innerText = country_two_element.value.toUpperCase();
+
+ // img element
+  country_one_img = document.createElement('img')
+  country_one_img.setAttribute("src", `${all_country_flags_dict[country_one_element.value]}`)
+  country_two_img = document.createElement('img')
+  country_two_img.setAttribute("src", `${all_country_flags_dict[country_two_element.value]}`)
+
+
+  country_one_info = document.createElement('h5')
+  country_one_info.setAttribute("class", "third-title")
+  country_one_info.innerHTML = `CAPITAL : ${all_country_info_dict[country_one_element.value][0][0].toUpperCase()} <br /> POPULATION : ${all_country_info_dict[country_one_element.value][1]}`
+  country_two_info = document.createElement('h5')
+  country_two_info.setAttribute("class", "third-title")
+  country_two_info.innerHTML = `CAPITAL : ${all_country_info_dict[country_two_element.value][0][0].toUpperCase()} <br /> POPULATION : ${all_country_info_dict[country_two_element.value][1]}`
+
+  // save info in local storage
+
+  country_one_div.append(country_one_img)
+  country_one_div.append(country_one_header)
+  country_one_div.append(country_one_info)
+  country_two_div.append(country_two_img)
+  country_two_div.append(country_two_header)
+  country_two_div.append(country_two_info)
+
+
+}
 function compareCountries() {
   let country_one_element = document.querySelector("#queryInput1");
   let country_two_element = document.querySelector("#queryInput2");
   if (all_country_names.includes(country_one_element.value) && all_country_names.includes(country_two_element.value)) {
     playAudio()
+    display_basic_info(country_one_element, country_two_element)
+    // fetch all data
+    // get basic info like flag, name, 
+    // get currency info for the last some days
+    // get chart data generate chart
 
   } else {
     // show warning if input is not valid

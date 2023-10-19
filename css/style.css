@@ -56,3 +56,24 @@ right: 60px;
 .individual_name:hover{
     background-color: #e9e9e9; 
   }
+
+
+#outputContainer{
+    text-align: center;
+    margin-top: 40px;
+    }
+
+.secondary-title { 
+    background-image: url("../images/bg2.jpg"); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    font-size: 50px; 
+    font-family:arial;
+    font-weight: 800; 
+    }
+
+img {
+    border-radius: 15%; 
+    width: 150px;
+    height: 100px;
+}
