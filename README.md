@@ -2,7 +2,7 @@
 #### Compare currency prices with graphs and table data of any two countries
 
 # Check out the website !
-Head over to <a href="paudsu01.github.io/e-country/index.html"> this page </a>
+Head over to <a href="https://paudsu01.github.io/e-country/index.html"> this page </a>
 <br><b>Don't forget to turn on the sound on the top right after you submit after selecting any two countries. You won't be disappointed.</b>
 
 # API's used:
