@@ -23,8 +23,7 @@ async function getAllCountryInfo() {
 var all_country_data = getAllCountryInfo();
 
  
-async function fetchExchangeRatesForPastMonths(country_currency) {
-    try {
+async function fetchExchangeRatesForPastMonths(country_currency, firstCall= true, localStorageload=false) {
   
       const currentDate = new Date();
       var resultContainer = document.createElement('div');
@@ -52,15 +51,28 @@ async function fetchExchangeRatesForPastMonths(country_currency) {
   
         const apiUrl = `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/${formattedDate}/currencies/eur/${country_currency.toLowerCase()}.json`;
         console.log(`API URL for ${formattedDate}:`, apiUrl);
-  
-        const response = await fetch(apiUrl);
-  
-        if (!response.ok) {
-          throw new Error('Error fetching exchange rate');
-        }
-  
-        const exchangeRateData = await response.json();
-        exchangeRateDataArray.push(exchangeRateData);
+    
+        if (localStorageload) {
+            if (firstCall) {
+              if (window.sessionStorage.getItem("exchangeRateData1")){
+              var exchangeRateData = JSON.parse(window.sessionStorage.getItem("exchangeRateData1"))[i]
+            }
+            
+              else {
+                  var response = await fetch(apiUrl);
+                  var exchangeRateData = await response.json();}
+              }
+            else {
+              if (window.sessionStorage.getItem("exchangeRateData2")){
+              var exchangeRateData = JSON.parse(window.sessionStorage.getItem("exchangeRateData2"))[i]}
+              else {
+                  var response = await fetch(apiUrl);
+                  var exchangeRateData = await response.json();}
+        }} else {
+        var response = await fetch(apiUrl);
+        var exchangeRateData = await response.json();}
+
+      exchangeRateDataArray.push(exchangeRateData);
   
         
         const row = table.insertRow(i + 1);
@@ -72,13 +84,16 @@ async function fetchExchangeRatesForPastMonths(country_currency) {
       }
       
       resultContainer.append(table);
-      localStorage.setItem('exchangeRateData', JSON.stringify(exchangeRateDataArray));
+      if (firstCall && (!localStorageload)) {
+      window.sessionStorage.setItem('exchangeRateData1', JSON.stringify(exchangeRateDataArray));}
+      else if (!localStorageload) {
+      window.sessionStorage.setItem('exchangeRateData2', JSON.stringify(exchangeRateDataArray));}
+
       return resultContainer
-    
   
-   } catch (error) {
-      console.error('Error fetching exchange rates:', error.message);
-    }
+//   } catch (error) {
+ //     console.error('Error fetching exchange rates:', error.message);
+  //  }
   }
   
 
@@ -119,24 +134,19 @@ function changeSoundMode() {
     element.value = 'volume';
   }}
 
-function generateChart() {
-    try {
-      const resultContainer = document.getElementById('currencyResult');
+function generateChart(number_) {
+      let id_ = `#country${number_}_output`;
+      var resultContainer = document.querySelector(id_);
+      console.log(resultContainer);
   
       
-      const exchangeRateDataArray = JSON.parse(localStorage.getItem('exchangeRateData'));
-  
-      if (!exchangeRateDataArray || exchangeRateDataArray.length !== 5) {
-        throw new Error('Invalid or missing exchange rate data.');
-      }
-  
-     
+      const exchangeRateDataArray = JSON.parse(sessionStorage.getItem(`exchangeRateData${number_}`));
+    
       const labels = exchangeRateDataArray.map(data => {
         const date = new Date(data.date);
         return `${date.toLocaleString('en-us', { month: 'short' })} ${date.getFullYear()}`;
       });
   
-      
       const currencyInfo = (exchangeRateDataArray[0] && Object.keys(exchangeRateDataArray[0])[1]) || '';
       const yMinValue = 135; 
   
@@ -170,15 +180,11 @@ function generateChart() {
   
       
       const chartImage = document.createElement('img');
+      chartImage.setAttribute("class", "graph")
       chartImage.src = chartUrl;
-  
-      resultContainer.appendChild(chartImage);
-  
+      resultContainer.append(chartImage);
       
      
-    } catch (error) {
-      console.error('Error generating chart:', error.message);
-    }
   }
 
 function playAudio() {
@@ -241,6 +247,7 @@ function show_country_on_input(event) {
   }
 }
 function display_basic_info(country_one_element, country_two_element) {
+  document.querySelector("#graph_and_table").innerHTML = ""
   let country_one_div = document.querySelector("#country1_output")
   country_one_div.innerHTML = ""
   let country_two_div = document.querySelector("#country2_output")
@@ -260,15 +267,28 @@ function display_basic_info(country_one_element, country_two_element) {
   let country_two_img = document.createElement('img')
   country_two_img.setAttribute("src", `${all_country_flags_dict[country_two_element.value]}`)
 
-
+  let country_one_info_dict = {};
+  country_one_info_dict.name = country_one_element.value
+  country_one_info_dict.captial = all_country_info_dict[country_one_element.value][0][0].toUpperCase()
+  country_one_info_dict.population = all_country_info_dict[country_one_element.value][1]
+  country_one_info_dict.currency = all_country_currency_code_dict[country_one_element.value]
+  country_one_info_dict.flag = all_country_flags_dict[country_one_element.value]
   let country_one_info = document.createElement('h5')
   country_one_info.setAttribute("class", "third-title")
-  country_one_info.innerHTML = `CAPITAL : ${all_country_info_dict[country_one_element.value][0][0].toUpperCase()} <br /> POPULATION : ${all_country_info_dict[country_one_element.value][1]} <br /> CURRECY : ${all_country_currency_code_dict[country_one_element.value]}`
+  country_one_info.innerHTML = `CAPITAL : ${country_one_info_dict.captial} <br /> POPULATION : ${country_one_info_dict.population} <br /> CURRECY : ${country_one_info_dict.currency}`
+
+  let country_two_info_dict = {};
+  country_two_info_dict.name = country_two_element.value
+  country_two_info_dict.captial = all_country_info_dict[country_two_element.value][0][0].toUpperCase()
+  country_two_info_dict.population = all_country_info_dict[country_two_element.value][1]
+  country_two_info_dict.currency = all_country_currency_code_dict[country_two_element.value]
+  country_two_info_dict.flag = all_country_flags_dict[country_two_element.value]
   let country_two_info = document.createElement('h5')
   country_two_info.setAttribute("class", "third-title")
-  country_two_info.innerHTML = `CAPITAL : ${all_country_info_dict[country_two_element.value][0][0].toUpperCase()} <br /> POPULATION : ${all_country_info_dict[country_two_element.value][1]} <br /> CURRECY : ${all_country_currency_code_dict[country_two_element.value]}`
+  country_two_info.innerHTML = `CAPITAL : ${country_two_info_dict.captial} <br /> POPULATION : ${country_two_info_dict.population} <br /> CURRECY : ${country_two_info_dict.currency}`
 
-  // save info in local storage
+  window.localStorage.setItem("country_one_name", country_one_info_dict.name)
+  window.localStorage.setItem("country_two_name", country_two_info_dict.name)
 
   country_one_div.append(country_one_img)
   country_one_div.append(country_one_header)
@@ -277,25 +297,41 @@ function display_basic_info(country_one_element, country_two_element) {
   country_two_div.append(country_two_header)
   country_two_div.append(country_two_info)
 
-  return  [all_country_currency_code_dict[country_two_element.value], all_country_currency_code_dict[country_one_element.value]]
-
+  return  [all_country_currency_code_dict[country_one_element.value], all_country_currency_code_dict[country_two_element.value]]
 
 }
-async function compareCountries() {
+async function show_graph() {
+  let display_table_button = document.querySelector("#data_graph_button");
+  generateChart(1);
+  generateChart(2);
+  display_table_button.remove();
+
+}
+async function compareCountries(localStorageload = false) {
   let country_one_element = document.querySelector("#queryInput1");
   let country_two_element = document.querySelector("#queryInput2");
   if (all_country_names.includes(country_one_element.value) && all_country_names.includes(country_two_element.value)) {
+    if (!localStorageload) {
     playAudio()
+    }
     currencies = display_basic_info(country_one_element, country_two_element)
 
     let display_table_button = document.createElement("button");
     display_table_button.setAttribute("class", "btn btn-outline-primary")
+    display_table_button.setAttribute("id", "data_graph_button")
     display_table_button.innerText = "Compare Vs Euros"
     document.querySelector("#graph_and_table").append(display_table_button)
     country_one_currency = currencies[0]
-    var response_div_1 = await fetchExchangeRatesForPastMonths(country_one_currency);
+    if (localStorageload) {
+    var response_div_1 = await fetchExchangeRatesForPastMonths(country_one_currency, true, true);
+    } else {
+    var response_div_1 = await fetchExchangeRatesForPastMonths(country_one_currency, true);
+    }
     country_two_currency = currencies[1]
-    var response_div_2 = await fetchExchangeRatesForPastMonths(country_two_currency);
+    if (localStorageload) {
+    var response_div_2 = await fetchExchangeRatesForPastMonths(country_two_currency, false, true);}
+    else {
+    var response_div_2 = await fetchExchangeRatesForPastMonths(country_two_currency, false);}
 
     // enable the button
     display_table_button.onclick = () => {
@@ -304,9 +340,8 @@ async function compareCountries() {
     document.querySelector("#country2_output").append(response_div_2);
     display_table_button.onclick = show_graph;
     }
-   // get chart data generate chart
-
-  } else {
+  } // get chart data generate chart
+  else {
     // show warning if input is not valid
     let wariningdiv = document.querySelector("#warningContainer");
     wariningdiv.innerHTML = ''
@@ -324,7 +359,6 @@ async function compareCountries() {
     div_element.append(button_element);
     wariningdiv.append(div_element)
   }
-
 
 }
 window.onload = function () {
@@ -344,5 +378,16 @@ window.onload = function () {
     var inputElement2 = document.querySelector('#queryInput2');
     inputElement1.addEventListener("input", autoComplete)
     inputElement2.addEventListener("input", autoComplete)
-    // call all countrues and get them ready for search data
+
+    country_1_name = window.localStorage.getItem("country_one_name");
+    country_2_name = window.localStorage.getItem("country_two_name");
+    if ((!country_1_name) || (!country_2_name)) {
+    } else {
+      //display_info
+      document.querySelector("#queryInput1").value = country_1_name
+      document.querySelector("#queryInput2").value = country_2_name
+      compareCountries(true);
+      
+    } 
+ 
 }
