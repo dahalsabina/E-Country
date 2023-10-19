@@ -12,28 +12,6 @@ function playAudio() {
     )
 }
 
-function change_to_light_mode(html_element, img_element) {
-    html_element.setAttribute("data-bs-theme", 'light');
-    img_element.setAttribute("src", "images/darkness.png");
-}
-
-function change_to_dark_mode(html_element, img_element) {
-    html_element.setAttribute("data-bs-theme", 'dark');
-    img_element.setAttribute("src", "images/brightness.png");
-}
-function changeMode(){
-    let element = document.querySelector("html");
-    let imgElement = document.querySelector("#toggleMode")
-
-    if (element.getAttribute("data-bs-theme") == 'dark'){
-    change_to_light_mode(element, imgElement);
-    window.localStorage.setItem("toggle_mode", "light");
-    } else {
-    change_to_dark_mode(element, imgElement);
-    window.localStorage.setItem("toggle_mode", "dark");
-    }
-
-}
 function changeSoundMode() {
   let element = document.querySelector('#sound');
   let audio_element = document.querySelector("#my_audio");

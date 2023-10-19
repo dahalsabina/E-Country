@@ -33,7 +33,7 @@ async function fetchExchangeRatesForPastMonths(country_currency, firstCall= true
      
       const table = document.createElement('table');
       table.className = 'table table-bordered table-striped';
-  
+      table.setAttribute("style", "border: 2px black;")
       
       const headerRow = table.insertRow(0);
       const dateHeader = headerRow.insertCell(0);
@@ -288,13 +288,6 @@ window.onload = function () {
     let element = document.querySelector("html");
     let imgElement = document.querySelector("#toggleMode")
 
-    mode = window.localStorage.getItem("toggle_mode");
-    if (mode == 'light') {
-        change_to_light_mode(element, imgElement);
-    } else {
-        change_to_dark_mode(element, imgElement);
-    } 
-    
     var inputElement1 = document.querySelector('#queryInput1');
     var inputElement2 = document.querySelector('#queryInput2');
     inputElement1.addEventListener("input", autoComplete)
